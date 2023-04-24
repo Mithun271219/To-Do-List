@@ -13,7 +13,7 @@ function Home() {
                 <div className="row align-items-center vh-100">
                     <div className="col-10 mx-auto">
                         <div className="card shadow-lg border-start">
-                            <div className='card-header'>
+                            <div className='card-header '>
                                 <div className="d-flex justify-content-around">
                                     <div><AddTask /></div>
                                     <div className='card-title'><ToDoList /></div>

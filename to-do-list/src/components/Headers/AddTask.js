@@ -6,8 +6,8 @@ import Model from './AddingTask/Model';
 function AddTask() {
     return (
         <>
-            <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" >Add task</button>
-            <Model title='Add Task' message='Task title' />
+            <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add" >Add task</button>
+            <Model id='add' title='Add Task' message='Task title' />
         </>
     )
 }

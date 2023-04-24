@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
@@ -6,44 +6,61 @@ import { MdDelete } from 'react-icons/md'
 import Context from '../../Context/Context';
 import Model from '../Headers/AddingTask/Model';
 
-function Body() {
+function Body(props) {
 
-    let { tasksList } = useContext(Context);
+    let { tasksList, setTasksList, setEditTask, editTask } = useContext(Context);
 
+    function handeChange(e) {
+        let id = e.target.id
+        let taskWithIndex = tasksList[id];
+        taskWithIndex.status === 'completed' ? taskWithIndex.status = 'incomplete' : taskWithIndex.status = 'completed'
+        setTasksList([...tasksList])
+    }
+
+    function handelEdit(id) {
+        setEditTask(tasksList[id])
+    }
+
+    function handelDelete(id) {
+        tasksList.splice(id, 1)
+        setTasksList([...tasksList])
+    }
 
     return (
         <>
             <table className='table table-hover table-striped'>
-                <thead>
-                    <th>Check</th>
-                    <th>Task</th>
-                    <th>Status</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+                <thead >
+                    <tr>
+                        <th>Check</th>
+                        <th>Task</th>
+                        <th>Status</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
                 </thead>
                 <tbody>
                     {
-                        tasksList.map(task => {
+                        tasksList.map((task, index) => {
                             return (
-                                <tr key={task.id}>
+                                <tr key={index}>
                                     <td>
-                                        <input className='form-check-input' type="checkbox" name="status" id="" />
+                                        <input className='form-check-input' defaultChecked={task.status === 'completed'} type="checkbox" onChange={handeChange} name="status" id={index} />
                                     </td>
-                                    <td>{task.title}</td>
+                                    <td>{task.task}</td>
                                     <td>{task.status}</td>
                                     <td>
-                                        <button type='button' data-bs-toggle="modal" data-bs-target="#staticBackdrop" className='btn'>
+                                        <button type='button' onClick={() => handelEdit(index)} data-bs-toggle="modal" data-bs-target="#edit" className='btn' id={index}>
                                             <FaEdit />
                                         </button>
                                     </td>
-                                    <td><button className='btn'><MdDelete /></button></td>
+                                    <td><button className='btn' onClick={() => handelDelete(index)} id={index}><span><MdDelete /></span></button></td>
                                 </tr>
                             )
                         })
                     }
                 </tbody>
             </table>
-            <Model title='Edit' message='Edit details' />
+            <Model id='edit' title='Edit' message='Edit details' />
         </>
     )
 }
