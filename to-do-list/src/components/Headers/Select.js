@@ -1,13 +1,40 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css'
 
+import Context from '../../Context/Context';
+
 function Select() {
+
+    let { tasksList, setTasksList, completed, setCompleted, incomplete, setIncomplete, all, setAll } = useContext(Context);
+
+
+    function handelChange(e) {
+        let value = e.target.value
+        if (value === 'completed') {
+            let completedItems = tasksList.filter(ele => {
+                if (ele.status === value) {
+                    return ele
+                }
+            })
+            setAll(completedItems)
+        } else if (value === 'incomplete') {
+            let incompleteItems = tasksList.filter(ele => {
+                if (ele.status === value) {
+                    return ele
+                }
+            })
+            setAll(incompleteItems)
+        } else {
+            setAll(tasksList)
+        }
+    }
+
     return (
         <div>
-            <select defaultValue={'all'} className='form-select' name="status" id="">
+            <select defaultValue={'all'} onChange={handelChange} className='form-select' name="status" id="">
                 <option value="all" >All</option>
                 <option value="incomplete" >Incomplete</option>
-                <option value="complete">Complete</option>
+                <option value="completed">Completed</option>
             </select>
         </div>
     )

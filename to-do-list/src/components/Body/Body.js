@@ -1,66 +1,63 @@
 import React, { useContext, useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
-import { FaEdit } from 'react-icons/fa'
 import { MdDelete } from 'react-icons/md'
 
 import Context from '../../Context/Context';
-import Model from '../Headers/AddingTask/Model';
+import AddTask from '../Headers/AddTask';
 
 function Body(props) {
 
-    let { tasksList, setTasksList, setEditTask, editTask } = useContext(Context);
+    let { tasksList, setTasksList, completed, setCompleted, incomplete, setIncomplete, all, setAll } = useContext(Context);
 
     function handeChange(e) {
-        let id = e.target.id
-        let taskWithIndex = tasksList[id];
+        let taskWithIndex = tasksList[e];
         taskWithIndex.status === 'completed' ? taskWithIndex.status = 'incomplete' : taskWithIndex.status = 'completed'
         setTasksList([...tasksList])
-    }
-
-    function handelEdit(id) {
-        setEditTask(tasksList[id])
+        setAll(tasksList)
     }
 
     function handelDelete(id) {
         tasksList.splice(id, 1)
         setTasksList([...tasksList])
+        setAll(tasksList)
     }
 
     return (
         <>
-            <table className='table table-hover table-striped'>
-                <thead >
-                    <tr>
-                        <th>Check</th>
-                        <th>Task</th>
-                        <th>Status</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        tasksList.map((task, index) => {
-                            return (
-                                <tr key={index}>
-                                    <td>
-                                        <input className='form-check-input' defaultChecked={task.status === 'completed'} type="checkbox" onChange={handeChange} name="status" id={index} />
-                                    </td>
-                                    <td>{task.task}</td>
-                                    <td>{task.status}</td>
-                                    <td>
-                                        <button type='button' onClick={() => handelEdit(index)} data-bs-toggle="modal" data-bs-target="#edit" className='btn' id={index}>
-                                            <FaEdit />
-                                        </button>
-                                    </td>
-                                    <td><button className='btn' onClick={() => handelDelete(index)} id={index}><span><MdDelete /></span></button></td>
-                                </tr>
-                            )
-                        })
-                    }
-                </tbody>
-            </table>
-            <Model id='edit' title='Edit' message='Edit details' />
+            {all.length > 0 ?
+
+                <table className='table table-hover table-striped'>
+                    <thead >
+                        <tr>
+                            <th>Check</th>
+                            <th>Task</th>
+                            <th>Status</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            all.map((task, index) => {
+                                return (
+                                    <tr key={task.id}>
+                                        <td>
+                                            <input className='form-check-input' checked={task.status === 'completed' ? true : false} type="checkbox" onChange={() => handeChange(index)} name="status" id={index} ids={task.id} />
+                                        </td>
+                                        <td>
+                                            {task.status === 'completed' ? <h6><s>{task.task}</s></h6> : <h6><span>{task.task}</span></h6>}
+                                            <div style={{ fontSize: 'smaller' }}>{task.time}</div>
+                                        </td>
+                                        <td>{task.status === 'completed' ? <s>{task.status}</s> : <span>{task.status}</span>}</td>
+                                        <td><button className='btn' onClick={() => handelDelete(index)} ids={task.id}><span><MdDelete /></span></button></td>
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                </table>
+                :
+                <div > <h4>No Tasks</h4></div>
+            }
         </>
     )
 }

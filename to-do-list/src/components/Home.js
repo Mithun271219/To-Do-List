@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import 'bootstrap/dist/css/bootstrap.css';
 
 import AddTask from './Headers/AddTask';
@@ -7,6 +7,7 @@ import ToDoList from './Headers/ToDoList';
 import Select from './Headers/Select';
 
 function Home() {
+
     return (
         <>
             <div className="container">

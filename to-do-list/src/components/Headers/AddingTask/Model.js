@@ -1,49 +1,33 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect, isValidElement } from 'react'
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap";
 import { useFormik } from 'formik'
 
 import Context from '../../../Context/Context';
+import { Schema } from './Schema';
 
 function Model(props) {
 
-    let { tasksList, setTasksList, editTask, setEditTask } = useContext(Context);
+    let { tasksList, setTasksList, completed, setCompleted, incomplete, setIncomplete, all, setAll } = useContext(Context);
 
     let initialValues = {
+        id: '',
         task: '',
         status: "incomplete",
         time: ''
     }
 
-    let { values, errors, handleBlur, handleChange, handleSubmit } = useFormik({
+    let { values, errors, touched, handleBlur, handleChange, handleSubmit, isValid } = useFormik({
         initialValues,
-
-        onSubmit: async (values, clear) => {
+        validationSchema: Schema,
+        onSubmit: (values, clear) => {
+            values.id = Math.floor(Math.random() * 10000)
             values.time = new Date().toLocaleString();
             setTasksList([...tasksList, values])
+            setAll([...tasksList, values])
             clear.resetForm();
         }
     })
-
-
-    // function Edit() {
-    //     let { tasksList, setTasksList } = useContext(Context);
-    //     let { initialValues, setInitialValues } = useContext({
-    //         task: '',
-    //         status: "incomplete",
-    //         time: ''
-    //     });
-
-    //     let { values, errors, handleBlur, handleChange, handleSubmit } = useFormik({
-    //         initialValues,
-
-    //         onSubmit: (values, clear) => {
-    //             clear.resetForm();
-    //         }
-    //     })
-    // }
-
-    // props.id === 'add' ? Add() : Edit();
 
     return (
         <div >
@@ -57,7 +41,8 @@ function Model(props) {
                         <form onSubmit={handleSubmit}>
                             <div className="modal-body">
                                 <label className='form-label' htmlFor="task">{props.message}:</label><br />
-                                <input type="text" value={values.task} onChange={handleChange} className='form-control' name="task" id="task" /><br />
+                                <input type="text" value={values.task} onChange={handleChange} onBlur={handleBlur} className='form-control' name="task" id="task" /><br />
+                                {errors.task && touched.task ? <p style={{ color: "red" }}>&nbsp;*&nbsp;{errors.task}</p> : null}
                                 <div className='d-flex justify-content-end gap-2'>
                                     <div className='me-auto'>
                                         <select onChange={handleChange} value={values.status} name="status" id="status" className='form-select' >
@@ -66,14 +51,14 @@ function Model(props) {
                                         </select>
                                     </div>
                                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Submit</button>
+                                    <button type="submit" disabled={!isValid} className="btn btn-primary" data-bs-dismiss='modal'>Submit</button>
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 
