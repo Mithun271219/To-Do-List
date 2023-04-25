@@ -1,13 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import { MdDelete } from 'react-icons/md'
 
 import Context from '../../Context/Context';
-import AddTask from '../Headers/AddTask';
 
 function Body(props) {
 
-    let { tasksList, setTasksList, completed, setCompleted, incomplete, setIncomplete, all, setAll } = useContext(Context);
+    let { tasksList, setTasksList, all, setAll } = useContext(Context);
 
     function handeChange(e) {
         let taskWithIndex = tasksList[e];

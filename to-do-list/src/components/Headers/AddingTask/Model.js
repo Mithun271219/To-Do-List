@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, isValidElement } from 'react'
+import React, { useContext } from 'react'
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap";
 import { useFormik } from 'formik'
@@ -8,7 +8,7 @@ import { Schema } from './Schema';
 
 function Model(props) {
 
-    let { tasksList, setTasksList, completed, setCompleted, incomplete, setIncomplete, all, setAll } = useContext(Context);
+    let { tasksList, setTasksList, setAll } = useContext(Context);
 
     let initialValues = {
         id: '',
